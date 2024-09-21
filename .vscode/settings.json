@@ -1,0 +1,11 @@
+{
+    "mochaExplorer.optsFile": "",
+    "testExplorer.useNativeTesting": false,
+    "mochaExplorer.files": "test/**/*.ts",
+    "mochaExplorer.require": [
+        "tsx",
+    ],
+    "mochaExplorer.esmLoader": true,
+    "mochaExplorer.fullTrace": true,
+    "mochaExplorer.nodePath": "default"
+}
