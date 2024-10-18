@@ -11,20 +11,21 @@ describe('TodoItemsManagerWithInjection affords partially isolated tests', funct
 			const repository = new TodoItemsRepository("database.db");
 			using todoItemsManager = new TodoItemsManagerWithInjection(repository);
 			const todoItem = todoItemsManager.addTodoItem("Do something");
-			todoItemsManager.completeTodoItem(todoItem);
+			todoItemsManager.completeTodoItem(todoItem.id);
 
-			expect(() => todoItemsManager.completeTodoItem(todoItem)).to.throw("TodoItem was already completed!");
+			expect(() => todoItemsManager.completeTodoItem(todoItem.id)).to.throw("TodoItem was already completed!");
 		});
     });
     describe('technically isolated tests', function() {
 		// A technically isolated test with material dependencies
         it('given TodoItemsManagerWithInjection when TodoItem exists then it can be completed', function() {
             const todoItem = new TodoItem("A", "Do something", 0);
-						const repository = sinon.createStubInstance(TodoItemsRepository);
-						repository[Symbol.dispose] = sinon.stub<[], void>();
+            const repository = sinon.createStubInstance(TodoItemsRepository);
+            repository.getAllTodoItems.returns([todoItem]);
+            repository[Symbol.dispose] = sinon.stub<[], void>();
             using todoItemsManager = new TodoItemsManagerWithInjection(repository);
             
-            todoItemsManager.completeTodoItem(todoItem);
+            todoItemsManager.completeTodoItem(todoItem.id);
 
             expect(todoItem.status).to.eq(1);
         });
@@ -32,10 +33,11 @@ describe('TodoItemsManagerWithInjection affords partially isolated tests', funct
         it('given TodoItemsManagerWithInjection when completing TodoItem then updateTodoItem is called', function() {
             const todoItem = new TodoItem("A", "Do something", 0);
             const repository = sinon.createStubInstance(TodoItemsRepository);
+            repository.getAllTodoItems.returns([todoItem]);
             repository[Symbol.dispose] = sinon.stub<[], void>();
             using todoItemsManager = new TodoItemsManagerWithInjection(repository);
             
-            todoItemsManager.completeTodoItem(todoItem);
+            todoItemsManager.completeTodoItem(todoItem.id);
 
             expect(repository.getAllTodoItems.calledOnce).to.eq(true);
         });
@@ -43,10 +45,11 @@ describe('TodoItemsManagerWithInjection affords partially isolated tests', funct
         it('given TodoItemsManagerWithInjection when completed TodoItem exists then it can not be completed', function() {
             const todoItem = new TodoItem("A", "Do something", 1);
             const repository = sinon.createStubInstance(TodoItemsRepository);
+            repository.getAllTodoItems.returns([todoItem]);
             repository[Symbol.dispose] = sinon.stub<[], void>();
             using todoItemsManager = new TodoItemsManagerWithInjection(repository);
             
-            expect(() => todoItemsManager.completeTodoItem(todoItem)).to.throw("TodoItem was already completed!");
+            expect(() => todoItemsManager.completeTodoItem(todoItem.id)).to.throw("TodoItem was already completed!");
         });
     });
 });

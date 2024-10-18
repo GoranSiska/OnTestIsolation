@@ -17,7 +17,7 @@ describe('TodoItemsManager affords integration tests', function() {
             using todoItemsManager = new TodoItemsManager("database.db");
             const todoItem = todoItemsManager.addTodoItem("Do something");
 
-            todoItemsManager.completeTodoItem(todoItem);
+            todoItemsManager.completeTodoItem(todoItem.id);
 
             expect(todoItem.status).to.eq(1);
         });
@@ -25,9 +25,9 @@ describe('TodoItemsManager affords integration tests', function() {
         it('given TodoItemsManager when completed TodoItem exists then it can not be completed', async function() {
             using todoItemsManager = new TodoItemsManager("database.db");
             const todoItem = todoItemsManager.addTodoItem("Do something");
-            todoItemsManager.completeTodoItem(todoItem);
+            todoItemsManager.completeTodoItem(todoItem.id);
 
-            expect(() => todoItemsManager.completeTodoItem(todoItem)).to.throw("TodoItem was already completed!");
+            expect(() => todoItemsManager.completeTodoItem(todoItem.id)).to.throw("TodoItem was already completed!");
         });
     });
 });

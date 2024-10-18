@@ -2,7 +2,7 @@ import crypto from "crypto";
 import { TodoItem } from "./TodoItem";
 
 export class TodoItemsLogic {
-	private _todoItems: Array<TodoItem>;
+	private readonly _todoItems: Array<TodoItem>;
 	
 	constructor(todoItems: Array<TodoItem> = []) {
 		this._todoItems = todoItems;
@@ -26,11 +26,15 @@ export class TodoItemsLogic {
 	public getAllTodoItems() {
 		return this._todoItems;
 	}
-	public completeTodoItem(todoItem: TodoItem) {
+	public completeTodoItem(id: string) {
+		let todoItem = this.getTodoItem(id);
+		if (!todoItem) {
+			throw new Error("TodoItem does not exist!");
+		}
 		if (todoItem.status != 0) {
 			throw new Error("TodoItem was already completed!");
 		}
-		var updatedTodoItem = new TodoItem(todoItem.id, todoItem.task, todoItem.status);
+		let updatedTodoItem = new TodoItem(todoItem.id, todoItem.task, todoItem.status);
 		updatedTodoItem.status = 1;
 		updatedTodoItem.task += " (DONE)";
 		return updatedTodoItem;

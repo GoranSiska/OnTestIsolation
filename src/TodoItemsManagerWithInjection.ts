@@ -3,8 +3,8 @@ import { TodoItem } from "./TodoItem"
 import { TodoItemsRepository } from "./TodoItemsRepository";
 
 export class TodoItemsManager implements Disposable {
-    private _repository: TodoItemsRepository;
-    private _todoItems: Array<TodoItem>
+    private readonly _repository: TodoItemsRepository;
+    private readonly _todoItems: Array<TodoItem>
 
     public constructor(repository: TodoItemsRepository) {
         this._repository = repository;
@@ -22,7 +22,11 @@ export class TodoItemsManager implements Disposable {
         return todoItem
     }
 
-	public completeTodoItem(todoItem: TodoItem) {
+	public completeTodoItem(id: string) {
+        let todoItem = this.getTodoItemById(id);
+        if (!todoItem) {
+			throw new Error("TodoItem does not exist!");
+		}
         if (todoItem.status != 0) {
             throw new Error("TodoItem was already completed!");
         }

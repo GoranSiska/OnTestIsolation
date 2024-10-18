@@ -11,9 +11,9 @@ describe('TodoItemsManagerOrchestrated affords fully isolated tests', function()
 			const repository = new TodoItemsRepository("database.db");
 			using todoItemsManager = new TodoItemsManagerOrchestrated(repository);
 			const todoItem = todoItemsManager.addTodoItem("Do something");
-			todoItemsManager.completeTodoItem(todoItem);
+			todoItemsManager.completeTodoItem(todoItem.id);
 
-			expect(() => todoItemsManager.completeTodoItem(todoItem)).to.throw("TodoItem was already completed!");
+			expect(() => todoItemsManager.completeTodoItem(todoItem.id)).to.throw("TodoItem was already completed!");
 		});
     });
     describe('fully isolated tests', function() {
@@ -25,7 +25,7 @@ describe('TodoItemsManagerOrchestrated affords fully isolated tests', function()
             repository[Symbol.dispose] = sinon.stub<[], void>();
             using todoItemsManager = new TodoItemsManagerOrchestrated(repository);
 
-            expect(() => todoItemsManager.completeTodoItem(todoItem)).to.throw("TodoItem was already completed!");
+            expect(() => todoItemsManager.completeTodoItem(todoItem.id)).to.throw("TodoItem was already completed!");
         });
         it('given TodoItemsLogic when completed TodoItem exists then it can not be completed', function() {
 			const todoItem = new TodoItem("A", "Do something", 1);
@@ -33,15 +33,18 @@ describe('TodoItemsManagerOrchestrated affords fully isolated tests', function()
 			//repository.getAllTodoItems.returns([todoItem]);
 			//repository[Symbol.dispose] = sinon.stub<[], void>();
 			const logic = new TodoItemsLogic();
+			logic.setTodoItem(todoItem);
 			//using todoItemsManager = new TodoItemsManagerOrchestrated(repository);
 
 			//todoItemsManager
-			expect(() => logic.completeTodoItem(todoItem)).to.throw("TodoItem was already completed!");
+			expect(() => logic.completeTodoItem(todoItem.id)).to.throw("TodoItem was already completed!");
         });
 			it('given TodoItemsLogic when TodoItem is completed then its task description changes', function() {
-				const logic = new TodoItemsLogic()
 				const todoItem = new TodoItem("A", "Do something", 0);
-				const completedTodoItem = logic.completeTodoItem(todoItem);
+				const logic = new TodoItemsLogic()
+				logic.setTodoItem(todoItem);
+
+				const completedTodoItem = logic.completeTodoItem(todoItem.id);
 
 				expect(completedTodoItem.task).to.eq("Do something (DONE)");
 		});

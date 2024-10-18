@@ -3,8 +3,8 @@ import { TodoItemsRepository } from "./TodoItemsRepository";
 import { TodoItemsLogic } from "./TodoItemsLogic";
 
 export class TodoItemsManager implements Disposable {
-    private _repository!: TodoItemsRepository;
-    private _logic!: TodoItemsLogic
+    private readonly _repository!: TodoItemsRepository;
+    private readonly _logic!: TodoItemsLogic
 
     public constructor(repository: TodoItemsRepository) {
         this._repository = repository;
@@ -22,8 +22,8 @@ export class TodoItemsManager implements Disposable {
         return addedTodoItem;
     }
 
-	public completeTodoItem(todoItem: TodoItem) {
-        const completedTodoItem = this._logic.completeTodoItem(todoItem);
+	public completeTodoItem(id: string) {
+        const completedTodoItem = this._logic.completeTodoItem(id);
         this._repository.updateTodoItem(completedTodoItem);
         this._logic.setTodoItem(completedTodoItem);
     }

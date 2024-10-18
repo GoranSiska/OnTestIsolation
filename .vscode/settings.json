@@ -7,5 +7,6 @@
     ],
     "mochaExplorer.esmLoader": true,
     "mochaExplorer.fullTrace": true,
-    "mochaExplorer.nodePath": "default"
+    "mochaExplorer.nodePath": "default",
+    "dimmer.enabled": false
 }

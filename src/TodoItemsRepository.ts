@@ -1,23 +1,27 @@
 import DatabaseConstructor, {Database} from "better-sqlite3";
 import { TodoItem } from "./TodoItem"
+import { sleep } from "./Misc";
 
 export class TodoItemsRepository implements Disposable {
-    private _db: Database;
+    private readonly _db: Database;
 
     constructor (dbFile: string) {
         this._db = new DatabaseConstructor(dbFile);
         const initDbQuery = `CREATE TABLE IF NOT EXISTS TODO_ITEMS ( ID TEXT, TASK TEXT, STATUS INT )`;
         this._db.exec(initDbQuery);
+        sleep() // simulating long running operation
     }
 
     public updateTodoItem(todoItem: TodoItem) {
         const updateTodoItemByIdQuery = `UPDATE TODO_ITEMS SET TASK = $task, STATUS = $status WHERE ID = $id`;
         this._db.prepare(updateTodoItemByIdQuery).run(this.toParameters(todoItem));
+        sleep() // simulating long running operation
     }
     
 	public insertTodoItem(todoItem: TodoItem) {
         const insertTodoItemQuery = `INSERT INTO TODO_ITEMS VALUES ( $id, $task, $status )`;
         this._db.prepare(insertTodoItemQuery).run(this.toParameters(todoItem));
+        sleep() // simulating long running operation
     }   
     
 	public getAllTodoItems(): Array<TodoItem> {
@@ -28,6 +32,7 @@ export class TodoItemsRepository implements Disposable {
                 result.push(this.toTodoItem(row));
             }
         }
+        sleep() // simulating long running operation
         return result;
     }
 
